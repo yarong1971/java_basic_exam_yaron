@@ -6,6 +6,7 @@ import com.epam.consumer.services.QuoterSaver;
 import com.epam.consumer.services.QuoteReader;
 import lombok.AllArgsConstructor;
 
+import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -16,9 +17,13 @@ public class QuoterConsumerFlowManager {
 
     public void consumeQuote(){
         new Thread(() -> {
-            System.out.println("Thread " + Thread.currentThread().getId() + ": Reading quote...");
-            consumer.readQuote(queue);
+            File file = consumer.getFile();
+            if(file != null){
+                System.out.println("Thread " + Thread.currentThread().getId() + ": Reading quote...");
+                consumer.readQuote(file, queue);
+            }
         });
+
         new Thread(() -> {
             System.out.println("Thread " + Thread.currentThread().getId() + ": Saving quote...");
             consumer.saveQuote(queue);
