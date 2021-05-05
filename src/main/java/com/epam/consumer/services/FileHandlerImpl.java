@@ -29,24 +29,16 @@ public class FileHandlerImpl implements FileHandler {
     @SneakyThrows
     @Override
     public File getFile() {
-        addNewFilesToList();
+        addNewFilesToQueue();
         return this.producerFiles.poll();
     }
 
     public boolean isFileQueueEmpty() {
         return this.producerFiles.isEmpty();
     }
-        //Optional<>
-        /*Optional<File> file = Files.list(Paths.get(locationDir))
-                .filter(Files::isRegularFile)
-                .map(Path::toFile)
-                .findFirst();
-
-        return file;*/
-    //}
 
     @SneakyThrows
-    private void addNewFilesToList(){
+    private void addNewFilesToQueue(){
         Path dir = Paths.get(this.locationDir);
         List<File> files = null;
         if (Files.isDirectory(dir)) {
@@ -57,13 +49,6 @@ public class FileHandlerImpl implements FileHandler {
                 .collect(Collectors.toList());
 
             this.producerFiles.addAll(files);
-
-/*
-                    .map(p -> {
-                    this.producerFiles.add(p.toFile());
-                    System.out.println(p.toFile().getAbsolutePath());
-                });
-*/
         }
     }
 
@@ -71,7 +56,6 @@ public class FileHandlerImpl implements FileHandler {
     @Override
     public void deleteFile(File file) {
         System.out.println("File path: " + file.getAbsolutePath());
-        //File newFile = new File(file);
         if(file.delete()){
             System.out.println("File " + file.getAbsolutePath() + " was successfuly deleted.");
         } else {
