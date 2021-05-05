@@ -5,13 +5,14 @@ import com.epam.infra.Singleton;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Singleton
 public class QuoteQueueHandlerImpl implements QuoteQueueHandler {
     private BlockingQueue<Quote> queue;
 
     public QuoteQueueHandlerImpl() {
-        this.queue = new ArrayBlockingQueue<>(100);
+        this.queue = new LinkedBlockingQueue<>();
     }
 
     @Override

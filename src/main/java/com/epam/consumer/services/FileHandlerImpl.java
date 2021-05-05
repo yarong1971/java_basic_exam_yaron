@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -22,7 +23,7 @@ public class FileHandlerImpl implements FileHandler {
     private long lastFileSearch;
 
     public FileHandlerImpl() {
-        this.producerFiles = new ArrayBlockingQueue<>(100);
+        this.producerFiles = new LinkedBlockingQueue<>();
         this.lastFileSearch = 0;
     }
 
@@ -47,8 +48,14 @@ public class FileHandlerImpl implements FileHandler {
                 .filter(p -> p.toFile().lastModified() > this.lastFileSearch)
                 .map(p -> p.toFile())
                 .collect(Collectors.toList());
+        }
 
+        if(!files.isEmpty()){
             this.producerFiles.addAll(files);
+            this.lastFileSearch = files.stream()
+                    .map(File::lastModified)
+                    .max(Long::compareTo)
+                    .orElse(this.lastFileSearch);
         }
     }
 

@@ -32,14 +32,14 @@ public class QuoterConsumerFlowManager {
         new Thread(() -> {
             File file = consumer.getFile();
             if(file != null){
-            System.out.println("Thread " + Thread.currentThread().getId() + ": Reading quote...");
-            consumer.readQuote(file);
+                System.out.println("Thread " + Thread.currentThread().getId() + ": Reading quote...");
+                consumer.readQuote(file);
            }
-         });
+         }).start();
 
         new Thread(() -> {
             System.out.println("Thread " + Thread.currentThread().getId() + ": Saving quote...");
             consumer.saveQuote();
-        });
+        }).start();
     }
 }

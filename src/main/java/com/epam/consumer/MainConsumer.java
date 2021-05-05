@@ -22,7 +22,7 @@ public class MainConsumer {
 
         while(true){
             flowManager.consumeQuote();
-            Thread.sleep(3000);
+
         }
     }
 }
