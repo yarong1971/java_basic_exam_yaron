@@ -20,9 +20,8 @@ public class MainConsumer {
         //For single thread
         //flowManager.consumeQuote();
 
-        while(true){
+        //while(true){
             flowManager.consumeQuote();
-
-        }
+        //}
     }
 }
