@@ -2,13 +2,13 @@ package com.epam.consumer.services;
 
 import com.epam.common.model.Quote;
 
-import java.io.File;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.nio.file.Path;
+import java.util.Optional;
 
 public interface QuoteConsumer {
-    File getFile();
-    void readQuote(File file, BlockingQueue<Quote> queue);
-    void saveQuote(BlockingQueue<Quote> queue);
-
+    Optional<String> getFile();
+    Quote readQuote(String path);
+    //void readQuote(File file, BlockingQueue<Quote> queue);
+    void saveQuote(Quote quote);
+    //void saveQuote(BlockingQueue<Quote> queue);
 }
