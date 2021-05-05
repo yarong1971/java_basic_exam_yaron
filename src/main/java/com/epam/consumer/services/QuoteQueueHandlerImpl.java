@@ -2,8 +2,6 @@ package com.epam.consumer.services;
 
 import com.epam.common.model.Quote;
 import com.epam.infra.Singleton;
-
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 

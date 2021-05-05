@@ -17,38 +17,9 @@ public class QuoterConsumerFlowManager {
 
     @SneakyThrows
     public void consumeQuote(){
-        // Consuming quote with single thread
-        /*Quote quote = null;
-        File file = consumer.getFile();
-        if(file != null){
-            System.out.println("Thread " + Thread.currentThread().getId() + ": Reading quote...");
-            quote = consumer.readQuote(file);
-        } else {
-            System.out.println("File not found. directory is empty");
-        }
 
-        System.out.println("Thread " + Thread.currentThread().getId() + ": Saving quote...");
-        consumer.saveQuote(quote);*/
-
-
-        // Consuming quote with multiple threads
         Thread t1 = new Thread(() -> ReadAndLoadQuoteToQueue());
-        /*{
-            File file = consumer.getFile();
-            if(file != null){
-                System.out.println("Thread " + Thread.currentThread().getId() + ": Reading quote...");
-                consumer.readQuote(file);
-           }
-         });*/
-
         Thread t2 = new Thread(() ->  GetQuoteFromQueueAndSaveToJson());
-/*
-                {
-                    System.out.println("Thread " + Thread.currentThread().getId() + ": Saving quote...");
-                    consumer.saveQuote();
-                });
-*/
-
         t1.start();
         t2.start();
         Thread.currentThread().join();

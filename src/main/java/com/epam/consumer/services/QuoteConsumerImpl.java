@@ -17,14 +17,6 @@ public class QuoteConsumerImpl implements QuoteConsumer {
         return handler.getFile();
     }
 
-    //@Override
-    /*public Quote readQuote(File file) {
-        Quote quote;
-        quote =  reader.read(file);
-        System.out.println("Quote: " + quote);
-        handler.deleteFile(file);
-        return quote;
-    }*/
     @Override
     public void readQuote(File file) {
         Quote quote;
@@ -32,14 +24,6 @@ public class QuoteConsumerImpl implements QuoteConsumer {
         System.out.println("Quote: " + quote);
         queueHandler.addQuote(quote);
     }
-
-    //@Override
-    /*public void saveQuote(Quote quote) {
-        if(quote != null) {
-            System.out.println(quote + " is saved");
-            saver.save(quote);
-        }
-    }*/
 
     @Override
     public void saveQuote() {
