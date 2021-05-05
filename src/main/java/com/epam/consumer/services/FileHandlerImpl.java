@@ -1,25 +1,41 @@
 package com.epam.consumer.services;
 
 import com.epam.infra.InjectValue;
+import com.epam.infra.Singleton;
 import lombok.SneakyThrows;
 
 import java.io.File;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.stream.Collectors;
 
+@Singleton
 public class FileHandlerImpl implements FileHandler {
 
     @InjectValue("producer_output_location")
-    String locationDir;
+    private String locationDir;
+    private BlockingQueue<File> producerFiles;
+    private long lastFileSearch;
+
+    public FileHandlerImpl() {
+        this.producerFiles = new ArrayBlockingQueue<>(100);
+        this.lastFileSearch = 0;
+    }
 
     @SneakyThrows
     @Override
-    public Optional<String> getFile() {
-          return Stream.of(new File(locationDir).listFiles())
-                        .filter(file -> !file.isDirectory())
-                        .map(File::getPath)
-                        .findAny();
+    public File getFile() {
+        addNewFilesToList();
+        return this.producerFiles.poll();
+    }
 
+    public boolean isFileQueueEmpty() {
+        return this.producerFiles.isEmpty();
+    }
         //Optional<>
         /*Optional<File> file = Files.list(Paths.get(locationDir))
                 .filter(Files::isRegularFile)
@@ -27,18 +43,39 @@ public class FileHandlerImpl implements FileHandler {
                 .findFirst();
 
         return file;*/
+    //}
+
+    @SneakyThrows
+    private void addNewFilesToList(){
+        Path dir = Paths.get(this.locationDir);
+        List<File> files = null;
+        if (Files.isDirectory(dir)) {
+            files = Files.list(dir)
+                .filter(p -> !Files.isDirectory(p))
+                .filter(p -> p.toFile().lastModified() > this.lastFileSearch)
+                .map(p -> p.toFile())
+                .collect(Collectors.toList());
+
+            this.producerFiles.addAll(files);
+
+/*
+                    .map(p -> {
+                    this.producerFiles.add(p.toFile());
+                    System.out.println(p.toFile().getAbsolutePath());
+                });
+*/
+        }
     }
 
     @SneakyThrows
     @Override
-    public void deleteFile(String path) {
-        System.out.println("File path: " + path);
+    public void deleteFile(File file) {
+        System.out.println("File path: " + file.getAbsolutePath());
         //File newFile = new File(file);
-        File file = new File(path);
         if(file.delete()){
-            System.out.println("File " + path + " was successfuly deleted.");
+            System.out.println("File " + file.getAbsolutePath() + " was successfuly deleted.");
         } else {
-            System.out.println("Failed to delete file " + path +".");
+            System.out.println("Failed to delete file " + file.getAbsolutePath() +".");
         }
     }
 }

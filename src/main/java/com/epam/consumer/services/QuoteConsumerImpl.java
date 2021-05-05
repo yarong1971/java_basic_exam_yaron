@@ -4,54 +4,49 @@ import com.epam.common.model.Quote;
 import lombok.AllArgsConstructor;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.util.Optional;
 
 @AllArgsConstructor
 public class QuoteConsumerImpl implements QuoteConsumer {
     private FileHandler handler;
+    private QuoteQueueHandler queueHandler;
     private QuoteReader reader;
     private QuoterSaver saver;
 
     @Override
-    public Optional<String> getFile() {
+    public File getFile() {
         return handler.getFile();
-
-        /*if(file.isPresent()){
-            return file.get();
-        }
-        return null;*/
     }
 
-    @Override
-    public Quote readQuote(String path) {
-        Quote quote;
-        quote =  reader.read(path);
-        System.out.println("Quote: " + quote);
-        handler.deleteFile(path);
-        return quote;
-    }
-    /*@Override
-    public void readQuote(File file , BlockingQueue<Quote> queue) {
+    //@Override
+    /*public Quote readQuote(File file) {
         Quote quote;
         quote =  reader.read(file);
         System.out.println("Quote: " + quote);
-        queue.add(quote);
+        handler.deleteFile(file);
+        return quote;
+    }*/
+    @Override
+    public void readQuote(File file) {
+        Quote quote;
+        quote =  reader.read(file);
+        System.out.println("Quote: " + quote);
+        queueHandler.addQuote(quote);
+    }
+
+    //@Override
+    /*public void saveQuote(Quote quote) {
+        if(quote != null) {
+            System.out.println(quote + " is saved");
+            saver.save(quote);
+        }
     }*/
 
     @Override
-    public void saveQuote(Quote quote) {
+    public void saveQuote() {
+        Quote quote = queueHandler.getQuote();
         if(quote != null) {
             System.out.println(quote + " is saved");
             saver.save(quote);
         }
     }
-    /*@Override
-    public void saveQuote(BlockingQueue<Quote> queue) {
-        Quote quote = queue.poll();
-        if(quote != null) {
-            System.out.println(quote + " is saved");
-            saver.save(quote);
-        }
-    }*/
 }

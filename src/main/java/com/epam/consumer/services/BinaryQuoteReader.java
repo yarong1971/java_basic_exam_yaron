@@ -9,7 +9,7 @@ public class BinaryQuoteReader implements QuoteReader {
 
     @SneakyThrows
     @Override
-    public Quote read(String file) {
+    public Quote read(File file) {
         Quote quote;
         ObjectInputStream oos = new ObjectInputStream(new FileInputStream(file));
         quote = (Quote) oos.readObject();

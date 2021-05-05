@@ -1,8 +1,8 @@
 package com.epam.consumer.services;
 
-import java.util.Optional;
+import java.io.File;
 
 public interface FileHandler {
-    Optional<String> getFile();
-    void deleteFile(String path);
+    File getFile();
+    void deleteFile(File file);
 }

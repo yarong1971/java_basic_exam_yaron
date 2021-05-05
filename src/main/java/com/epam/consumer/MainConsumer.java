@@ -17,11 +17,11 @@ public class MainConsumer {
 
         ApplicationContext context = new ApplicationContext(JavaConfig.builder().packagesToScan("com.epam").build());
         QuoterConsumerFlowManager flowManager = context.getObject(QuoterConsumerFlowManager.class);
-        flowManager.consumeQuote();
+        //flowManager.consumeQuote();
 
-        /*while(true){
+        while(true){
             flowManager.consumeQuote();
             Thread.sleep(3000);
-        }*/
+        }
     }
 }
